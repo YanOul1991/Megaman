@@ -6,39 +6,30 @@ using UnityEngine.SceneManagement;
 public class deplacementPersonnage : MonoBehaviour
 {
     private float vitesseX;
-    public float vitesseDeplacement;
+    public float vitesseCourse;
     private float vitesseY;
     public float forceSaut;
-    
-    // Boolean pour voir si la partie est termine
-    //private bool partieTermine = false;
 
-    // Sons
+    // Sons du jeu
     public AudioClip sonMort;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
-        // On ecoute les touches du claviers tant que le personnage n'est pas mort
+        // On ecoute les touches du clavier si le parametre "mort" de megaman est faux
         if (GetComponent<Animator>().GetBool("mort") == false)
         {
             // vitesse en X
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
-                vitesseX = -vitesseDeplacement;
-               
-                GetComponent<SpriteRenderer>().flipX = true; // Flip le sprite si le personnage cours a gauche
+                vitesseX = -vitesseCourse;
+                // Flip X est true si deplacement vers la gauche
+                GetComponent<SpriteRenderer>().flipX = true; 
             }
             else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)){
-                vitesseX = vitesseDeplacement;
-
-                GetComponent<SpriteRenderer>().flipX = false; // Flip pas le sprite si le personnage cours a gauche
+                vitesseX = vitesseCourse;
+                // Flip X est false deplacement vers la droite
+                GetComponent<SpriteRenderer>().flipX = false; 
             }
             else
             {
@@ -46,7 +37,7 @@ public class deplacementPersonnage : MonoBehaviour
             }
 
             //Sauts
-            if ((Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && Physics2D.OverlapCircle(transform.position, 0.25f))
+            if ((Input.GetKeyDown(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && Physics2D.OverlapCircle(transform.position, 0.2f))
             {
                 vitesseY = forceSaut;
 
@@ -67,16 +58,16 @@ public class deplacementPersonnage : MonoBehaviour
                 GetComponent<Animator>().SetBool("marche", false);
             }
 
+            // On applique les vitesses au personnage
+            GetComponent<Rigidbody2D>().velocity = new Vector2(vitesseX, vitesseY);
         }
-        // On applique les vitesses au personnage
-        GetComponent<Rigidbody2D>().velocity = new Vector2(vitesseX, vitesseY);
     }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Sort de l'animation de saut si megaman touche a un object avec ses pieds
-        if (Physics2D.OverlapCircle(transform.position, 0.25f))
+        if (Physics2D.OverlapCircle(transform.position, 0.2f))
         {
             GetComponent<Animator>().SetBool("saut", false);
         }
@@ -84,21 +75,18 @@ public class deplacementPersonnage : MonoBehaviour
         // Lorsque collision avec ennemi
         if (collision.gameObject.name == "wheeler")
         {
-            // Valeur de condition `mort` de l'animator devient true
+            // Valeur de parametre "mort" de l'animator devient true
             GetComponent<Animator>().SetBool("mort", true);
 
             // Audio de mort joue une fois
             GetComponent<AudioSource>().PlayOneShot(sonMort);
-
-            // On imobilise megaman a sa position x 
-            vitesseX = 0;
 
             // Relance le Jeu
             Invoke("RelancerJeu", 2f);
         }
     }
 
-    // Fonction qui va redemarer la scene du jeu
+    // Fonction qui relance la scene du jeu
     private void RelancerJeu()
     {
         SceneManager.LoadScene(0);

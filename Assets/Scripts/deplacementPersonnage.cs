@@ -10,8 +10,14 @@ public class deplacementPersonnage : MonoBehaviour
     private float vitesseY;
     public float forceSaut;
 
+    // Variable float pour vitesse de deplacement lors des attaques
+    public float vitesseMaximale;
+
     // Sons du jeu
     public AudioClip sonMort;
+
+    // Variable bool permettant au joueur de pouvoir attaquer
+    private bool peutAttaquer = true;
 
     // Update is called once per frame
     void Update()
@@ -48,7 +54,7 @@ public class deplacementPersonnage : MonoBehaviour
                 vitesseY = GetComponent<Rigidbody2D>().velocity.y;
             }
 
-            // Gestion des sprites de report et course
+            // Gestion des sprites de repors et course
             if(Mathf.Abs(vitesseX) > 0.9f)
             {
                 GetComponent<Animator>().SetBool("marche", true);
@@ -56,6 +62,33 @@ public class deplacementPersonnage : MonoBehaviour
             else
             {
                 GetComponent<Animator>().SetBool("marche", false);
+            }
+
+            // Gestion des attaques avec la touche espace
+            if(Input.GetKeyDown(KeyCode.Space))
+            {   
+                // Si megaman peut attaquer
+                if(peutAttaquer)
+                {
+                    // Si megaman n'est pas en plein saut
+                    if(GetComponent<Animator>().GetBool("saut") == false)
+                    {
+                        GetComponent<Animator>().SetBool("attaque", true);
+                        peutAttaquer = false;
+
+                        Invoke("PrepareAttaque", 0.5f);                     
+                    }
+                }
+            }
+
+            // Si l'animation d;attaque est en cours
+            if(GetComponent<Animator>().GetBool("attaque") == true)
+            {
+                // On multiplie la vitesse du deplacement de megaman en fesaent en sorte qu'elle ne depasse pas la vitesse max
+                if(Mathf.Abs(vitesseX) <= vitesseMaximale)
+                {
+                    vitesseX *= 2;
+                }
             }
 
             // On applique les vitesses au personnage
@@ -72,18 +105,37 @@ public class deplacementPersonnage : MonoBehaviour
             GetComponent<Animator>().SetBool("saut", false);
         }
 
-        // Lorsque collision avec ennemi
-        if (collision.gameObject.name == "wheeler")
+        // Lorsque collision avec object avec comme tag ennemi
+        if (collision.gameObject.tag == "Ennemi")
         {
-            // Valeur de parametre "mort" de l'animator devient true
-            GetComponent<Animator>().SetBool("mort", true);
+            // Si megaman est en animation d'attaque
+            if (GetComponent<Animator>().GetBool("attaque") == true)
+            {
+                collision.gameObject.GetComponent<Animator>().SetBool("mort", true);
+            }
 
-            // Audio de mort joue une fois
-            GetComponent<AudioSource>().PlayOneShot(sonMort);
+            if (GetComponent<Animator>().GetBool("attaque") == false)
+            {
+                // Valeur de parametre "mort" de l'animator devient true
+                GetComponent<Animator>().SetBool("mort", true);
 
-            // Relance le Jeu
-            Invoke("RelancerJeu", 2f);
+                // Audio de mort joue une fois
+                GetComponent<AudioSource>().PlayOneShot(sonMort);
+
+                // Relance le Jeu
+                Invoke("RelancerJeu", 2f);
+            }
         }
+    }
+
+    // Fonction qui permet a megaman de pouvoir attaquer de nouveau
+    private void PrepareAttaque()
+    {
+        // On arrete l'animation d'attaque
+        GetComponent<Animator>().SetBool("attaque", false);
+
+        // On permet l'attaque
+        peutAttaquer = true;
     }
 
     // Fonction qui relance la scene du jeu

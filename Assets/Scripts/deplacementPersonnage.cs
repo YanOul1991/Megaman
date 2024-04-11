@@ -67,17 +67,13 @@ public class deplacementPersonnage : MonoBehaviour
             // Gestion des attaques avec la touche espace
             if(Input.GetKeyDown(KeyCode.Space))
             {   
-                // Si megaman peut attaquer
-                if(peutAttaquer)
+                // Si megaman peut attaquer et qu,il n'est pas en plein saut
+                if(peutAttaquer && GetComponent<Animator>().GetBool("saut") == false)
                 {
-                    // Si megaman n'est pas en plein saut
-                    if(GetComponent<Animator>().GetBool("saut") == false)
-                    {
-                        GetComponent<Animator>().SetBool("attaque", true);
-                        peutAttaquer = false;
+                    GetComponent<Animator>().SetBool("attaque", true);
+                    peutAttaquer = false;
 
-                        Invoke("PrepareAttaque", 0.5f);                     
-                    }
+                    Invoke("PrepareAttaque", 0.5f);                                                         
                 }
             }
 
@@ -104,6 +100,10 @@ public class deplacementPersonnage : MonoBehaviour
         {
             GetComponent<Animator>().SetBool("saut", false);
         }
+        else
+        {
+            GetComponent<Animator>().SetBool("saut", true);
+        }
 
         // Lorsque collision avec object avec comme tag ennemi
         if (collision.gameObject.tag == "Ennemi")
@@ -111,9 +111,17 @@ public class deplacementPersonnage : MonoBehaviour
             // Si megaman est en animation d'attaque
             if (GetComponent<Animator>().GetBool("attaque") == true)
             {
+                // Animation de mort des ennemis
                 collision.gameObject.GetComponent<Animator>().SetBool("mort", true);
+                
+                // Desactivation du collider de l'ennemi 
+                collision.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+
+                // L'ennemi est detruit
+                Destroy(collision.gameObject, 0.9f);
             }
 
+            // Si megaman se fait touche par un ennemi, mais pas en attaque
             if (GetComponent<Animator>().GetBool("attaque") == false)
             {
                 // Valeur de parametre "mort" de l'animator devient true

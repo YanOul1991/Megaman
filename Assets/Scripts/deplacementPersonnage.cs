@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,11 +14,25 @@ public class deplacementPersonnage : MonoBehaviour
     // Variable float pour vitesse de deplacement lors des attaques
     public float vitesseMaximale;
 
-    // Sons du jeu
+    // Sons mort
     public AudioClip sonMort;
 
     // Variable bool permettant au joueur de pouvoir attaquer
     private bool peutAttaquer = true;
+
+    // variable public static inc pour compter le nombre de points
+    public static int pointage;
+    public static int pointageRecord;
+    public TextMeshProUGUI textePointage;
+
+    // Animation de mort
+    public AnimationClip animMort;
+
+    private void Start()
+    {
+        // On remet le pointage a 0 au debut de la partie
+        pointage = 0;
+    }
 
     // Update is called once per frame
     void Update()
@@ -90,9 +105,53 @@ public class deplacementPersonnage : MonoBehaviour
             // On applique les vitesses au personnage
             GetComponent<Rigidbody2D>().velocity = new Vector2(vitesseX, vitesseY);
         }
+
+        // Met a jour le texte du pointage
+        textePointage.text = "Points : " + pointage.ToString();
     }
 
+    // Gestions des triggerColliders
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Si megaman touche a un balle de point
+        if (collision.gameObject.tag == "Point petit")
+        {
+            // On detruit la balle
+            Destroy(collision.gameObject);
 
+            // Augment le pointage
+            pointage++;
+        }
+
+
+        // Si megaman tombe dans le vide
+        if (collision.gameObject.name == "LeVide")
+        {
+            // Valeur de parametre "mort" de l'animator devient true
+            GetComponent<Animator>().SetBool("mort", true);
+
+            // Audio de mort joue une fois
+            GetComponent<AudioSource>().PlayOneShot(sonMort);
+
+            // Chargement de la scene de mort une seconde apres la fin de l'animation de mort
+            Invoke("SceneMort", animMort.length + 1);
+        }
+
+        // Si megaman touche au trophee
+        if (collision.gameObject.name == "trophee")
+        {
+            // On regarde le nombre de point et si il depaase le record
+            if (pointage > pointageRecord)
+            {
+                pointageRecord = pointage;
+            }
+
+            SceneManager.LoadScene(3);
+        }
+
+    }
+
+    // Gestions des collisionColliders
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Sort de l'animation de saut si megaman touche a un object avec ses pieds
@@ -130,8 +189,8 @@ public class deplacementPersonnage : MonoBehaviour
                 // Audio de mort joue une fois
                 GetComponent<AudioSource>().PlayOneShot(sonMort);
 
-                // Relance le Jeu
-                Invoke("RelancerJeu", 2f);
+                // Chargement de la scene de mort une seconde apres la fin de l'animation de mort
+                Invoke("SceneMort", animMort.length + 1);
             }
         }
     }
@@ -146,9 +205,9 @@ public class deplacementPersonnage : MonoBehaviour
         peutAttaquer = true;
     }
 
-    // Fonction qui relance la scene du jeu
-    private void RelancerJeu()
+    // Fonction qui charge la scene dechec
+    private void SceneMort()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(2);
     }
 }

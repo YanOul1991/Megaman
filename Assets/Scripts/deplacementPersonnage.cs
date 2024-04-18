@@ -106,6 +106,13 @@ public class deplacementPersonnage : MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = new Vector2(vitesseX, vitesseY);
         }
 
+        //Lorsque le joueur appuit sur la touche return
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            //Appel de la fonction d'attaque de projectil
+            Invoke("AttaqueProjectile", 0f);
+        }
+
         // Met a jour le texte du pointage
         textePointage.text = "Points : " + pointage.ToString();
     }
@@ -193,6 +200,13 @@ public class deplacementPersonnage : MonoBehaviour
                 Invoke("SceneMort", animMort.length + 1);
             }
         }
+    }
+
+
+    // Fonction qui gere les projectiles d'attaque de megaman
+    void AttaqueProjectile()
+    {
+
     }
 
     // Fonction qui permet a megaman de pouvoir attaquer de nouveau

@@ -28,6 +28,11 @@ public class deplacementPersonnage : MonoBehaviour
     // Animation de mort
     public AnimationClip animMort;
 
+    // variable public GameObject pour la balle originale
+    public GameObject balleOriginale;
+    // Variable public AudioClip pour le son des balle lors des tires
+    public AudioClip sonArme;
+
     private void Start()
     {
         // On remet le pointage a 0 au debut de la partie
@@ -106,15 +111,46 @@ public class deplacementPersonnage : MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = new Vector2(vitesseX, vitesseY);
         }
 
-        //Lorsque le joueur appuit sur la touche return
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            //Appel de la fonction d'attaque de projectil
-            Invoke("AttaqueProjectile", 0f);
-        }
-
         // Met a jour le texte du pointage
         textePointage.text = "Points : " + pointage.ToString();
+
+
+        // Gestion des balles/projectiles
+        // Si le joueur appuit sur la touche return que megaman n'est pas en etat d'attaque ou de saut;
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (GetComponent<Animator>().GetBool("saut") == false && GetComponent<Animator>().GetBool("attaque") == false)
+            {
+                // On declanche l'animation de tire
+                GetComponent<Animator>().SetBool("tireBalle", true);
+
+                // Creation d'une nouvelle instance de balle
+                GameObject nouvelleBalle = Instantiate(balleOriginale);
+
+                // Activation de la nouvelle balle
+                nouvelleBalle.SetActive(true);
+
+                // Joue le son de l'arme
+                GetComponent<AudioSource>().PlayOneShot(sonArme);
+
+                // on place la balle au bon endroit selon la position de megaman et si il regarde a gauche ou a droite
+                nouvelleBalle.transform.position = transform.position + new Vector3(0.6f, 1, 0);
+                nouvelleBalle.GetComponent<Rigidbody2D>().velocity = new Vector2(25, 0);
+
+                // Inversion des valeurs des vecteurs x si le flipX de megaman est a true
+                if (GetComponent<SpriteRenderer>().flipX == true)
+                {
+                    nouvelleBalle.transform.position = transform.position + new Vector3(-0.6f, 1, 0);
+                    nouvelleBalle.GetComponent<Rigidbody2D>().velocity = new Vector2(-25, 0);
+                }
+
+            }
+        }
+        // si la touche return est relache, la variable tireBalle retourne a false
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            GetComponent<Animator>().SetBool("tireBalle", false);
+        }
     }
 
     // Gestions des triggerColliders
@@ -200,13 +236,6 @@ public class deplacementPersonnage : MonoBehaviour
                 Invoke("SceneMort", animMort.length + 1);
             }
         }
-    }
-
-
-    // Fonction qui gere les projectiles d'attaque de megaman
-    void AttaqueProjectile()
-    {
-
     }
 
     // Fonction qui permet a megaman de pouvoir attaquer de nouveau

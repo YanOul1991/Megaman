@@ -4,6 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/* Script de gestion des fonctions de base de Megaman :mouvements avec WASD et attaques, projectiles.
+   Gestion des animations selon differents etat de Megaman, saut, attaques, mort...
+   Gestions des collisions avec ennemis et objets interactifs
+   Par : Yanis Oulmane
+   Derniere modification : 01/05/2024
+ */
+
 public class deplacementPersonnage : MonoBehaviour
 {
     private float vitesseX;

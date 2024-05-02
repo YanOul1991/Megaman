@@ -4,6 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/* Script de gestion de la scene de victoire, lorsque le joueur gagnera la partie
+   Par : Yanis Oulmane
+   Derniere modification : 01/05/2024
+ */
+
+
 public class _gestionSceneGagne : MonoBehaviour
 {
     // Variable AudioClip qui sera asigne le son de victoire
@@ -40,6 +46,7 @@ public class _gestionSceneGagne : MonoBehaviour
         textePointage.text = deplacementPersonnage.pointage.ToString() + " points!";
     }
 
+    // Fonction qui recharge la scene d'introduction
     void RetournerIntro()
     {
         SceneManager.LoadScene(0);

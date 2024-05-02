@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Script de gestion de la camera active du joueur
+ * Changement de la entre deux camera selon Input du joueur
+   Par : Yanis Oulmane
+   Dernire modification : 01/05/2024
+ */
+
 public class gestionCameras : MonoBehaviour
 {
     public GameObject camera1;

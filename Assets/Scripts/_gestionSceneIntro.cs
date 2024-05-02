@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine;
+/* Script de gestion de la scene de d'introduction
+   Par : Yanis Oulmane
+   Dernire modification : 01/05/2024
+ */
+
 
 public class _CommencerPartie : MonoBehaviour
 {

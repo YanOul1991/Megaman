@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/* Script de gestion des roues dentees 
+ * Gestions des animation et components lorsque elles interagisent avec le joueur
+   Par : Yanis Oulmane
+   Derniere modification : 01/05/2024
+ */
+
+
 public class roueDente : MonoBehaviour
 {
 

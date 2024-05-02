@@ -4,6 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/* Script de gestion de la scene de de defaite / scene de mort, lorsque le joueeur perdera la partie
+   Par : Yanis Oulmane
+   Dernire modification : 01/05/2024
+ */
+
+
 public class _gestionSceneMort : MonoBehaviour
 {
     public TextMeshProUGUI textePointage;

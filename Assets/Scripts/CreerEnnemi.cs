@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Script de gestion de la creation d'ennemis par programmation avec un objet dynamique
+   Gestion de la creation d'instances d'un ennemi avec la fonction Instantiate() et gestion de chaque nouvelle iteratrion de l'objet
+   Par : Yanis Oulmane
+   Dernire modification : 01/05/2024
+ */
+
 public class CreerEnnemi : MonoBehaviour
 {
     public GameObject ennemiACreer;

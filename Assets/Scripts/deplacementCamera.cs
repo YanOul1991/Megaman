@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Script de gestion des positionnement de la camera du joueur
+   Par : Yanis Oulmane
+   Dernire modification : 01/05/2024
+ */
+
 public class deplacementCamera : MonoBehaviour
 {
     // Variables publiques GameObject pour associer megaman et les cameras

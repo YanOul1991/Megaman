@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Scripte de gestions des balles / projectiles de Megaman, gestion du deplacement des balles.
+   Gestion des interactions avec plusieurs element du jeu (decor et ennemis).
+   Gestions des animations de la balles et des entites avec lesquels la balle interagit
+
+   Par : Yanis Oulmane
+   Dernire modification : 01/05/2024
+ */
 public class Balle : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         
